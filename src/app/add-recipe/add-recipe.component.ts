@@ -11,9 +11,9 @@ import {Recipe} from '../recipe.model';
 })
 export class AddRecipeComponent implements OnInit {
 
-  // @ViewChild('f') recipeForm: NgForm;
+  @ViewChild('f') recipeForm: NgForm;
   private tags: string[] = [];
-  public currentTag: string;
+  public currentTag: string = '';
 
   constructor(private http: Http) { }
 
@@ -21,7 +21,10 @@ export class AddRecipeComponent implements OnInit {
   }
 
   addTag(tag: string) {
-    this.tags.push(tag);
+    if (tag.length > 0) {
+      this.tags.push(tag);
+      this.currentTag = '';
+    }
   }
 
   removeTag(tag: string) {
@@ -33,13 +36,12 @@ export class AddRecipeComponent implements OnInit {
     if (event.keyCode === 13) {
       event.preventDefault();
       this.addTag(this.currentTag);
-      this.currentTag = '';
     }
   }
 
   submit(form: NgForm) {
     if (form.valid) {
-      const recipe: Recipe = new Recipe((<any>form).recipeName.value, (<any>form).description.value, this.tags);
+      const recipe: Recipe = new Recipe(form.value.recipeName, form.value.description, this.tags);
 
       // save recipe to the DB
       this.http.post('/api/recipes', recipe)

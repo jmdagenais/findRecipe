@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 
 import 'rxjs/add/operator/map';
 import {Subscription} from 'rxjs/Subscription';
+import {Recipe} from '../recipe.model';
 
 @Component({
   selector: 'app-recipe-list',
@@ -10,29 +11,33 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./recipe-list.component.scss']
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
+  currentSearch: string;
   selectedTags: string[] = [];
   allTags: string[] = [];
   displayTags: string[] = [];
+  recipes: Recipe[] = [];
 
-  httpSubscription: Subscription;
+  tagsSubscription: Subscription;
+  recipeSubscription: Subscription;
 
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit() {
-    this.httpClient.get<string[]>('/api/tags')
+    this.tagsSubscription = this.httpClient.get<string[]>('/api/tags')
       .subscribe((tags: string[]) => {
         this.allTags = tags;
       });
+
+    this.getRecipesByTag();
   }
 
   onSearchTag(event) {
-    let value: string = event.currentTarget.value;
-    if(value.length === 0) {
+    if(this.currentSearch.length === 0) {
       this.displayTags = [];
       return;
     }
     this.displayTags = this.allTags.filter((tag: string) => {
-      return tag.indexOf(value) === 0 && this.selectedTags.indexOf(tag) === -1;
+      return tag.indexOf(this.currentSearch) === 0 && this.selectedTags.indexOf(tag) === -1;
     });
   }
 
@@ -42,6 +47,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     if (idx === -1) {
       this.selectedTags.push(tag);
       this.getRecipesByTag();
+      this.currentSearch = '';
+      this.displayTags = [];
     }
   }
 
@@ -54,6 +61,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   getRecipesByTag() {
     let url = '/api/recipes';
     let query = '';
+    // Build the query string
     this.selectedTags.forEach((t: string, index: number) => {
       if (index === 0) {
         query += 'tags=' + t;
@@ -61,16 +69,18 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         query += '&tags=' + t;
       }
     });
-    if (query.length > 0) url += '?';
-    url = url + query;
+    if (query.length > 0) {
+      url = url + '?' + query;
+    }
 
-    this.httpClient.get(url)
-      .subscribe((recipes) => {
-        console.log(recipes);
+    this.recipeSubscription = this.httpClient.get(url)
+      .subscribe((recipes: Recipe[]) => {
+        this.recipes = recipes;
       });
   }
 
   ngOnDestroy() {
-    this.httpSubscription.unsubscribe();
+    this.tagsSubscription.unsubscribe();
+    this.recipeSubscription.unsubscribe();
   }
 }
