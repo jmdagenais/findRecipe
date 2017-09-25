@@ -1,0 +1,11 @@
+<h3>To find a recipe, choose one or many tag(s)</h3>
+<span class="ui-fluid">
+  <input type="text" placeholder="Select a tag" (keyup)="onSearchTag($event)">
+  <br>
+  <span class="badge" *ngFor="let tag of selectedTags">{{tag}} <i class="glyphicon glyphicon-remove" (click)="removeTag(tag, selectedTags)"></i></span>
+  <ul class="list-group">
+    <button type="button" class="list-group-item" *ngFor="let tag of displayTags" (click)="selectTag(tag)">
+      {{tag}}
+    </button>
+  </ul>
+</span>
