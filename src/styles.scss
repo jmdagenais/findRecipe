@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  background-color: #ccc;
+}
+
+.main-content {
+width: 80%;
+height: 100vh;
+margin: 0 auto;
+background-color: white;
+}
+
+.top-bar {
+  height: 60px;
+  width: 100%;
+  margin: 0;
+  background-color: #000000;
+  padding-top: 15px;
+
+  h1 {
+    color: white;
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    margin: 0 10px;
+  }
+}
+

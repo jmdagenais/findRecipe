@@ -1,0 +1,41 @@
+<form #f="ngForm" (ngSubmit)="submit(f)">
+  <div class="form-group">
+    <label for="recipeName">Recipe Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="recipeName"
+      name="recipeName"
+      ngModel
+      required>
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+      ngModel
+      required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="tags">Choose tags</label>
+    <div class="input-group">
+      <input type="text" class="form-control" id="tags" name="tags" #tagInput (keypress)="onKeyPress($event)" [(ngModel)]="currentTag">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" (click)="addTag(tagInput.value)">Add tag</button>
+      </span>
+    </div>
+    <span class="badge" *ngFor="let tag of tags">{{tag}} <i class="glyphicon glyphicon-remove" (click)="removeTag(tag)"></i></span>
+
+    <!--<ul class="list-group">-->
+      <!--<li class="list-group-item">Salad</li>-->
+      <!--<li class="list-group-item">Pasta</li>-->
+      <!--<li class="list-group-item">Chicken</li>-->
+      <!--<li class="list-group-item">Pork</li>-->
+    <!--</ul>-->
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Ok</button>
+  </div>
+</form>

@@ -1,0 +1,22 @@
+<h3>To find a recipe, choose one or many tag(s)</h3>
+<span class="ui-fluid">
+  <input type="text" placeholder="Select a tag" (keyup)="onSearchTag($event)" [(ngModel)]="currentSearch">
+  <br>
+  <span class="badge" *ngFor="let tag of selectedTags">{{tag}} <i class="glyphicon glyphicon-remove" (click)="removeTag(tag, selectedTags)"></i></span>
+  <ul class="list-group">
+    <button type="button" class="list-group-item" *ngFor="let tag of displayTags" (click)="selectTag(tag)">
+      {{tag}}
+    </button>
+  </ul>
+  <hr>
+  <div style="display: flex; justify-content: space-between;">
+    <h4>Recipes:</h4>
+    <button class="btn btn-success btn-small" routerLink="/recipes/add">Add Recipe</button>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let recipe of recipes">
+      <p><strong>{{recipe.name}}</strong></p>
+      <h6><span>{{ recipe.tags.join(', ') }}</span></h6>
+    </li>
+  </ul>
+</span>
